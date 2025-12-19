@@ -13,9 +13,6 @@ import java.util.List;
 @SpringBootApplication
 public class DemoApplication {
 
-    @Autowired
-    BookRepository bookRepository;
-
     public static void main(String[] args) {
         SpringApplication.run(DemoApplication.class, args);
     }
