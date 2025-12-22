@@ -10,6 +10,12 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "select * from users u where u.username = :keyword or u.first_name like :keyword + '%' or u.last_name like :keyword + '%'", nativeQuery = true)
+    @Query(
+            value = "SELECT * FROM users u " +
+                    "WHERE u.username = :keyword " +
+                    "OR u.first_name LIKE CONCAT(:keyword, '%') " +
+                    "OR u.last_name LIKE CONCAT(:keyword, '%')",
+            nativeQuery = true
+    )
     List<User> findByKeyword(String keyword);
 }
