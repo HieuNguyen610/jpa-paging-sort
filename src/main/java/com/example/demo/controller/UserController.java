@@ -1,14 +1,16 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.request.CreateUserRequest;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -30,12 +32,17 @@ public class UserController {
 
     @GetMapping("/users/list")
     public Map<String, Object> list(@RequestParam(required = false) String keyword) {
-        List<UserDto> users = userService.getAllUser(keyword);
         Map<String, Object> response = Map.of(
                 "status", "success",
-                "data", users,
+                "data", userService.getAllUser(keyword),
                 "message", "Users retrieved successfully"
         );
         return response;
+    }
+
+    @PostMapping("/users/create")
+    public ResponseEntity<Long> createUser(CreateUserRequest user) {
+        UserDto userDto = userService.createUser(user);
+        return ResponseEntity.ok(userDto.getId());
     }
 }

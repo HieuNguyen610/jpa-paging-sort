@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.request.CreateUserRequest;
 import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,23 @@ public class UserServiceImpl implements UserService {
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getAddress())
-                .city(user.getCity()).build()).toList();
+                .city(user.getCity())
+                .build())
+                .toList();
+    }
+
+    private UserDto mapToDto(User user) {
+        return UserDto.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .city(user.getCity())
+                .build();
     }
 
     @Override
@@ -38,5 +55,20 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> getAllUser(String keyword) {
         List<User> users = userRepository.findByKeyword(keyword);
         return mapToDto(users);
+    }
+
+    @Override
+    public UserDto createUser(CreateUserRequest user) {
+        User newUser = User.builder()
+                .username(user.getUsername())
+                .password(user.getPassword())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .email(user.getEmail())
+                .phone(user.getPhone())
+                .address(user.getAddress())
+                .city(user.getCity()).build();
+        User savedUser = userRepository.save(newUser);
+        return mapToDto(savedUser);
     }
 }
