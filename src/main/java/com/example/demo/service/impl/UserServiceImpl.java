@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.UserDto;
+import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.CreateUserRequest;
@@ -15,60 +16,24 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
-    private List<UserDto> mapToDto(List<User> users) {
-        return users.stream().map(user -> UserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .city(user.getCity())
-                .build())
-                .toList();
-    }
-
-    private UserDto mapToDto(User user) {
-        return UserDto.builder()
-                .id(user.getId())
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .city(user.getCity())
-                .build();
-    }
+    private final UserMapper userMapper;
 
     @Override
     public List<UserDto> getAllUser() {
         List<User> users = userRepository.findAll();
-        return mapToDto(users);
+        return users.stream().map(userMapper::toDto).toList();
     }
 
     @Override
     public List<UserDto> getAllUser(String keyword) {
         List<User> users = userRepository.findByKeyword(keyword);
-        return mapToDto(users);
+        return users.stream().map(userMapper::toDto).toList();
     }
 
     @Override
-    public UserDto createUser(CreateUserRequest user) {
-        User newUser = User.builder()
-                .username(user.getUsername())
-                .password(user.getPassword())
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .email(user.getEmail())
-                .phone(user.getPhone())
-                .address(user.getAddress())
-                .city(user.getCity()).build();
+    public UserDto createUser(CreateUserRequest userRequest) {
+        User newUser = userMapper.toEntity(userRequest);
         User savedUser = userRepository.save(newUser);
-        return mapToDto(savedUser);
+        return userMapper.toDto(savedUser);
     }
 }

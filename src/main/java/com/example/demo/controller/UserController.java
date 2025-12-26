@@ -4,8 +4,10 @@ import com.example.demo.dto.UserDto;
 import com.example.demo.request.CreateUserRequest;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.Operation;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -15,6 +17,7 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -41,8 +44,8 @@ public class UserController {
     }
 
     @PostMapping("/users/create")
-    public ResponseEntity<Long> createUser(CreateUserRequest user) {
+    public ResponseEntity<UserDto> createUser(@Valid CreateUserRequest user) {
         UserDto userDto = userService.createUser(user);
-        return ResponseEntity.ok(userDto.getId());
+        return ResponseEntity.ok(userDto);
     }
 }
