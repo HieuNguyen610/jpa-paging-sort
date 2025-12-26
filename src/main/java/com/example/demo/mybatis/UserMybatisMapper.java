@@ -6,7 +6,7 @@ import org.apache.ibatis.annotations.*;
 import java.util.List;
 
 @Mapper
-public interface UserMapper {
+public interface UserMybatisMapper {
 
     @Select("select * from users")
     List<User> findAll();

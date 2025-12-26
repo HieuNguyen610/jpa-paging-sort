@@ -10,7 +10,8 @@ import org.springframework.context.annotation.Configuration;
 import javax.sql.DataSource;
 
 @Configuration
-@MapperScan("com.example.demo.mapper")
+// Only scan the MyBatis mapper interfaces to avoid picking up MapStruct mappers
+@MapperScan("com.example.demo.mybatis")
 public class PersistentConfig {
 
     @Bean

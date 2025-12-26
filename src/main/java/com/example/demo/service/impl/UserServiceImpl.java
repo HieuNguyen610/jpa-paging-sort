@@ -3,6 +3,7 @@ package com.example.demo.service.impl;
 import com.example.demo.dto.UserDto;
 import com.example.demo.mapper.UserMapper;
 import com.example.demo.model.User;
+import com.example.demo.mybatis.UserMybatisMapper;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.request.CreateUserRequest;
 import com.example.demo.service.UserService;
@@ -19,7 +20,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
-    private final com.example.demo.mybatis.UserMapper mybatisUserMapper;
+    private final UserMybatisMapper mybatisUserMapper;
 
     @Override
     public List<UserDto> getAllUser() {
