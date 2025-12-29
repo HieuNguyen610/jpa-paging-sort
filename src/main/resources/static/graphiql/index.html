@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GraphiQL (local)</title>
+  <!-- Using jsDelivr CDN which sets CORS headers correctly -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/graphiql@0.17.5/graphiql.css" />
+  <style>
+    html, body, #graphiql { height: 100%; margin: 0; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div id="graphiql">Loading...</div>
+
+  <!-- React & ReactDOM UMD builds (GraphiQL 0.17 requires React 16) -->
+  <script src="https://cdn.jsdelivr.net/npm/react@16/umd/react.production.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/react-dom@16/umd/react-dom.production.min.js"></script>
+  <!-- GraphiQL UMD -->
+  <script src="https://cdn.jsdelivr.net/npm/graphiql@0.17.5/graphiql.min.js"></script>
+
+  <script>
+    // minimal setup to render GraphiQL and point to /graphql endpoint
+    (function() {
+      function graphQLFetcher(graphQLParams) {
+        return fetch('/graphql', {
+          method: 'post',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(graphQLParams),
+          credentials: 'same-origin'
+        }).then(function (response) {
+          return response.json().catch(function () { return response.text(); });
+        });
+      }
+
+      const container = document.getElementById('graphiql');
+      // GraphiQL global provided by graphiql.min.js
+      const element = GraphiQL ? GraphiQL : window.GraphiQL;
+      if (!element) {
+        container.innerText = 'GraphiQL failed to load.';
+        return;
+      }
+
+      ReactDOM.render(
+        React.createElement(GraphiQL, { fetcher: graphQLFetcher }),
+        container
+      );
+    })();
+  </script>
+</body>
+</html>
